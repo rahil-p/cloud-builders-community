@@ -3,10 +3,18 @@
 
 steps:
 # Build the Closure Compiler builder (Java) then run it and output its help
-- name: "gcr.io/cloud-builders/docker"
-  args: ["build", "--tag=gcr.io/${PROJECT_ID}/google-closure-compiler", "."]
-- name: "gcr.io/${PROJECT_ID}/google-closure-compiler"
-  args: ["--help"]
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+    - 'build'
+    - '--tag=gcr.io/$PROJECT_ID/google-closure-compiler:${_VERSION}'
+    - '--build-arg'
+    - 'version=${_VERSION}'
+    - '.'
+  - name: 'gcr.io/$PROJECT_ID/google-closure-compiler:${_VERSION}'
+    args: ['--version']
 
-images: ["gcr.io/${PROJECT_ID}/google-closure-compiler"]
+substitutions:
+  _VERSION: 'latest'
+
+images: ['gcr.io/$PROJECT_ID/google-closure-compiler:${_VERSION}']
 tags: ['cloud-builders-community']
